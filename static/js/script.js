@@ -1,10 +1,13 @@
+
 const uploadForm = document.getElementById("uploadForm");
 const imageInput = document.getElementById("imageInput");
 const imagePreview = document.getElementById("imagePreview");
 const previewContainer = document.getElementById("previewContainer");
 const predictButton = document.getElementById("predictButton");
 const result = document.getElementById("result");
+const methodSelect = document.getElementById("methodSelect");
 
+// Preview gambar
 imageInput.addEventListener("change", function () {
     const file = imageInput.files[0];
 
@@ -22,10 +25,12 @@ imageInput.addEventListener("change", function () {
     }
 });
 
+// Prediksi gambar
 uploadForm.addEventListener("submit", async function (event) {
     event.preventDefault();
 
     const file = imageInput.files[0];
+    const selectedMethod = methodSelect.value;
 
     if (!file) {
         result.className = "result not-fresh";
@@ -34,10 +39,13 @@ uploadForm.addEventListener("submit", async function (event) {
     }
 
     const formData = new FormData();
+
     formData.append("file", file);
+    formData.append("method", selectedMethod);
 
     predictButton.disabled = true;
     predictButton.textContent = "Processing...";
+
     result.className = "result loading";
     result.innerHTML = "<p>Analyzing image, please wait...</p>";
 
@@ -54,6 +62,7 @@ uploadForm.addEventListener("submit", async function (event) {
         }
 
         let statusClass = "fresh";
+
         if (data.prediction === "Not Fresh") {
             statusClass = "not-fresh";
         } else if (data.prediction === "Highly Fresh") {
@@ -61,15 +70,22 @@ uploadForm.addEventListener("submit", async function (event) {
         }
 
         result.className = `result ${statusClass}`;
+
         result.innerHTML = `
             <h3>Prediction Result</h3>
-            <p>Freshness Level: <strong class="status-badge">${data.prediction}</strong></p>
-            <p>Confidence: <strong>${data.confidence}%</strong></p>
+            <p>Method: <strong>${data.method}</strong></p>
+            <p>Freshness Level:
+                <strong class="status-badge">${data.prediction}</strong>
+            </p>
+            <p>Confidence:
+                <strong>${data.confidence}%</strong>
+            </p>
         `;
 
     } catch (error) {
         result.className = "result not-fresh";
         result.innerHTML = `<p>Error: ${error.message}</p>`;
+
     } finally {
         predictButton.disabled = false;
         predictButton.textContent = "Predict Freshness";

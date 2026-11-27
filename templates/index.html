@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fish Freshness Classification</title>
+    <title>FishFresh - Fish Freshness Classification</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
@@ -17,7 +17,7 @@
 
         <section class="hero">
             <h1>Fish Freshness Classification</h1>
-            
+            <p>Classify fish freshness using different machine learning methods.</p>
         </section>
 
         <section class="upload-card">
@@ -25,6 +25,17 @@
             <p>Select an image of a fish eye to start the classification.</p>
 
             <form id="uploadForm">
+
+                <div class="method-selection">
+                    <label for="methodSelect">Choose Classification Method</label>
+
+                    <select id="methodSelect" name="method">
+                        <option value="cnn">CNN</option>
+                        <option value="knn_glcm">KNN + GLCM</option>
+                        <option value="svm_hog">SVM + HOG</option>
+                    </select>
+                </div>
+
                 <label for="imageInput" class="upload-area">
                     <div class="upload-icon">📷</div>
                     <h3>Choose an Image</h3>
@@ -39,6 +50,7 @@
                 <button type="submit" id="predictButton">
                     Predict Freshness
                 </button>
+
             </form>
 
             <div id="result" class="result"></div>
