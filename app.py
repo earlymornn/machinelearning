@@ -5,6 +5,7 @@ import joblib
 import numpy as np
 import streamlit as st
 import tensorflow as tf
+from huggingface_hub import hf_hub_download
 
 from PIL import Image
 from skimage.feature import graycomatrix, graycoprops, hog
@@ -44,15 +45,20 @@ def load_knn_model():
 
 @st.cache_resource
 def load_svm_model():
-    model = joblib.load(
-        os.path.join(MODEL_DIR, "svm_hog_model.pkl")
+    model_path = hf_hub_download(
+        repo_id="earlymornn/fishfresh-svm",
+        filename="svm_hog_model.pkl"
     )
+    return joblib.load(model_path)
 
-    scaler = joblib.load(
-        os.path.join(MODEL_DIR, "svm_hog_scaler.pkl")
+
+@st.cache_resource
+def load_svm_scaler():
+    scaler_path = hf_hub_download(
+        repo_id="earlymornn/fishfresh-svm",
+        filename="svm_hog_scaler.pkl"
     )
-
-    return model, scaler
+    return joblib.load(scaler_path)
 
 def preprocess_cnn(image_bytes):
 
@@ -210,9 +216,11 @@ def predict_knn(image_bytes):
     return predicted_class, probability
 
 
+
 def predict_svm(image_bytes):
 
-    model, scaler = load_svm_model()
+    model = load_svm_model()
+    scaler = load_svm_scaler()
 
     features = extract_hog(image_bytes)
 
@@ -229,6 +237,7 @@ def predict_svm(image_bytes):
     )
 
     return predicted_class
+
 
 st.set_page_config(
     page_title="FishFresh - Fish Freshness Classification",
