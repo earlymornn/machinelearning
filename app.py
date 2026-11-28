@@ -216,9 +216,11 @@ def predict_knn(image_bytes):
     return predicted_class, probability
 
 
+
 def predict_svm(image_bytes):
 
-    model, scaler = load_svm_model()
+    model = load_svm_model()
+    scaler = load_svm_scaler()
 
     features = extract_hog(image_bytes)
 
@@ -235,6 +237,7 @@ def predict_svm(image_bytes):
     )
 
     return predicted_class
+
 
 st.set_page_config(
     page_title="FishFresh - Fish Freshness Classification",
