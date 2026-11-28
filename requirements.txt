@@ -5,3 +5,4 @@ Pillow
 joblib
 scikit-learn
 scikit-image
+huggingface_hub
